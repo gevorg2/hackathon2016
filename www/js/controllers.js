@@ -4,7 +4,7 @@ angular.module('starter.controllers', [])
     return localStorage.getItem('userInfo');
   }
 })
-.controller('DashCtrl', function($scope) {
+.controller('DashCtrl', function($scope,appConfig,$http) {
  $scope.isLoggedIn = function() {
     return localStorage.getItem('userInfo');
   }
@@ -30,12 +30,82 @@ angular.module('starter.controllers', [])
      request: request
    }
  */
-  $scope.createContract= function(){
+  $scope.submit= function(){
+    var data = {
+          "password": JSON.parse(localStorage.getItem('userInfo')).password,
+          "src" : appConfig.contract, 
+          "args": {
+            "_price": $scope.data.Price,
+            "_reqType": $scope.data.Qty,
+            "_entityName": $scope.data.Qty,
+            "_validator": appConfig.addressMiddlware,
+            "_consumer": appConfig.addressConsumer
+            //,
+            //"oracleAddress": $scope.pizzaContract.oracleAddress
+          }
+        };
+      
+      var req = {
+        method: 'POST',
+        url: appConfig.keyserver + 'users/' + JSON.parse(localStorage.getItem('userInfo')).username + '/' + localStorage.getItem('userAddress') + '/contract',
+        headers: {
+          "content-type": "application/json"
+        },
+        data : data
+      };
+      $http(req).then(response => {
+        console.log("ADDRESS of POST");
+        console.log(response.data);
 
+        $scope.newContract = response.data;
+        /**
+         * After deploying the smart contract we will call 
+         * the contract method and pass in the contract details
+         */
+      //   var data = {
+      //     "password": JSON.parse(localStorage.getItem('userInfo')).password,
+      //     "src" : appConfig.contract, 
+      //     "args": {
+      //       "_price": $scope.pizzaContract.price,
+      //       "_reqType": $scope.pizzaContract.topping,
+      //       "_entityName": $scope.pizzaContract.topping,
+      //       "_validator": $scope.pizzaContract.topping,
+      //       "_consumer": $scope.pizzaContract.topping
+      //       //,
+      //       //"oracleAddress": $scope.pizzaContract.oracleAddress
+      //     }
+      //   };
+  
+      //   var req = {
+      //    method: 'POST',
+      //    url: appConfig.keyserver + 'users/' + JSON.parse(localStorage.getItem('userInfo')).username+ '/'+ localStorageService.get('address') + '/contract/Pizza/' + $scope.newContract + '/call',
+      //    headers: {
+      //      'Content-Type': 'application/json'
+      //    },
+      //    data: JSON.stringify(data)
+      //   };
+    
+      //   $http(req).then(response => {
+      //     /**
+      //      * Now that we have a successfully deployed smart contract 
+      //      * let's transition to the detail view of the contract.
+      //      */
+      //     $('#mining-transaction').modal('hide');
+      //     $('#mining-transaction').on('hidden.bs.modal', function (e) {
+      //       $state.transitionTo('issuance', {id:$scope.newContract});
+      //     });
+      //   }, response => {
+      //       $scope.data = response.data || "Request failed";
+      //       $scope.status = response.status;
+      //   });
+      }, response => {
+      //     $scope.data = response.data || "Request failed";
+      //     $scope.status = response.status;
+       });
   }
 
 })
-.controller("RegisterCtrl", function($scope,$state,appConfig) {
+.controller("RegisterCtrl", function($scope,$state,appConfig,$http) {
   $scope.formInfo = {
     username: '',
     password: '',
@@ -45,7 +115,7 @@ angular.module('starter.controllers', [])
     return localStorage.getItem('userInfo');
   }
   $scope.register = function() {
-    localStorage.setItem('userInfo' , JSON.stringify({finCorpAddress: $scope.formInfo.finCorpAddress}));
+    localStorage.setItem('userInfo' , JSON.stringify( $scope.formInfo));
     $scope.createUser($scope.formInfo);
     $state.go('tab.dash', null, {reload: true});
   }
@@ -64,14 +134,16 @@ angular.module('starter.controllers', [])
 
       $http(req).then(response => {
         console.log('created user');
+        localStorage.setItem('userAddress' , response.data);
         $state.transitionTo('dashboard', {name: $scope.newUser});
       }, response => {
-          $scope.data = response.data || "Request failed";
-          $scope.status = response.status;
+          // $scope.data = response.data || "Request failed";
+          // $scope.status = response.status;
+          //localStorage.setItem('userAddress' , response.data);
       });
     } 
     
-  }
+  
 })
 
 .controller('ChatsCtrl', function($scope, Chats) {
