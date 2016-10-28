@@ -1,6 +1,29 @@
 angular.module('starter.controllers', [])
+.controller('MainCtrl', function($scope) {
+  $scope.isLoggedIn = function() {
+    return localStorage.getItem('userInfo');
+  }
+})
+.controller('DashCtrl', function($scope) {
+ $scope.isLoggedIn = function() {
+    return localStorage.getItem('userInfo');
+  }
 
-.controller('DashCtrl', function($scope) {})
+})
+.controller("RegisterCtrl", function($scope,$state) {
+  $scope.formInfo = {
+    username: '',
+    password: '',
+    finCorpAddress: ''
+  }
+  $scope.isLoggedIn = function() {
+    return localStorage.getItem('userInfo');
+  }
+  $scope.register = function() {
+    localStorage.setItem('userInfo' , JSON.stringify({finCorpAddress: $scope.formInfo.finCorpAddress}));
+    $state.go('tab.dash', null, {reload: true});
+  }
+})
 
 .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called

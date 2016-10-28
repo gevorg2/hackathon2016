@@ -35,6 +35,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
     .state('tab', {
     url: '/tab',
     abstract: true,
+    controller:'MainCtrl',
     templateUrl: 'templates/tabs.html'
   })
 
@@ -48,7 +49,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         controller: 'DashCtrl'
       }
     }
-  })
+  }) 
 
   .state('tab.chats', {
       url: '/chats',
@@ -68,6 +69,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
       }
     })
+  .state('tab.register', {
+    url: '/register',
+    views: {
+      'register': {
+        templateUrl: 'templates/register.html',
+        controller: 'RegisterCtrl'
+      }
+    }
+  })
 
   .state('tab.account', {
     url: '/account',
