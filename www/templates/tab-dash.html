@@ -8,9 +8,31 @@
           <label class="item item-input">
               <input type="text" placeholder="Financial Organization" ng-model="data.finorg" required>
           </label>
-          <label class="item item-input">
-              <input type="text" placeholder="Financial Organization" ng-model="data.finorg" required>
+          <label class="item item-input item-select" style="width:100%">
+            <div class="input-label">
+                Type
+            </div>
+                <select ng-model="data.type" style="left:0">
+                    <option value="A">Ask</option>
+                    <option value="B">Bid</option>
+                </select>
+            </label>           
+           <label class="item item-input">
+              <input type="text" placeholder="Price" ng-model="data.Price" required>
           </label>
+            <label class="item item-input">
+              <input type="text" placeholder="Quantity" ng-model="data.Qty" required>
+          </label>
+           
+           <label class="item item-input item-select"  style="width:100%">
+            <div class="input-label">
+                Currency
+            </div>
+                <select ng-model="data.Paycond" style="left:0">
+                <option value="B">Ruble</option>
+                <option value="H">Hryvnia</option>
+            </select>
+            </label>       
       </div>
       <button class="button button-block button-calm" ng-click="login()">Login</button>
   </ion-content>

@@ -8,6 +8,14 @@ angular.module('starter.controllers', [])
  $scope.isLoggedIn = function() {
     return localStorage.getItem('userInfo');
   }
+  $scope.data = {
+    finorg: '',
+    username: '',
+    type: 'A',
+    Paycond: 'B',
+    Qty: '',
+    Price: ''
+  }
 
 /*
  var request={
