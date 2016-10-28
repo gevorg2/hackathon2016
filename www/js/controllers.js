@@ -9,8 +9,25 @@ angular.module('starter.controllers', [])
     return localStorage.getItem('userInfo');
   }
 
+/*
+ var request={
+     price:0,
+      reqType:'bid',//bid/ask
+     entityName: ''
+  }
+   var contract ={
+     Address:'',
+     middlwareAddress: '',
+     consumerAddress:'',
+     request: request
+   }
+ */
+  $scope.createContract= function(){
+
+  }
+
 })
-.controller("RegisterCtrl", function($scope,$state) {
+.controller("RegisterCtrl", function($scope,$state,appConfig) {
   $scope.formInfo = {
     username: '',
     password: '',
@@ -21,7 +38,31 @@ angular.module('starter.controllers', [])
   }
   $scope.register = function() {
     localStorage.setItem('userInfo' , JSON.stringify({finCorpAddress: $scope.formInfo.finCorpAddress}));
+    $scope.createUser($scope.formInfo);
     $state.go('tab.dash', null, {reload: true});
+  }
+    $scope.createUser = function(userInfo){
+
+      var dataString = "password=" + userInfo.password+"&faucet=1";
+
+      var req = {
+       method: 'POST',
+       url: appConfig.keyserver + 'users/'+userInfo.username,
+       headers: {
+         'Content-Type': 'application/x-www-form-urlencoded'
+       },
+       data: dataString
+      };
+
+      $http(req).then(response => {
+        console.log('created user');
+        $state.transitionTo('dashboard', {name: $scope.newUser});
+      }, response => {
+          $scope.data = response.data || "Request failed";
+          $scope.status = response.status;
+      });
+    } 
+    
   }
 })
 
