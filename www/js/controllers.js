@@ -33,16 +33,7 @@ angular.module('starter.controllers', [])
   $scope.submit= function(){
     var data = {
           "password": JSON.parse(localStorage.getItem('userInfo')).password,
-          "src" : appConfig.contract, 
-          "args": {
-            "_price": $scope.data.Price,
-            "_reqType": $scope.data.Qty,
-            "_entityName": $scope.data.Qty,
-            "_validator": appConfig.addressMiddlware,
-            "_consumer": appConfig.addressConsumer
-            //,
-            //"oracleAddress": $scope.pizzaContract.oracleAddress
-          }
+          "src" : appConfig.contract          
         };
       
       var req = {
@@ -62,45 +53,44 @@ angular.module('starter.controllers', [])
          * After deploying the smart contract we will call 
          * the contract method and pass in the contract details
          */
-      //   var data = {
-      //     "password": JSON.parse(localStorage.getItem('userInfo')).password,
-      //     "src" : appConfig.contract, 
-      //     "args": {
-      //       "_price": $scope.pizzaContract.price,
-      //       "_reqType": $scope.pizzaContract.topping,
-      //       "_entityName": $scope.pizzaContract.topping,
-      //       "_validator": $scope.pizzaContract.topping,
-      //       "_consumer": $scope.pizzaContract.topping
-      //       //,
-      //       //"oracleAddress": $scope.pizzaContract.oracleAddress
-      //     }
-      //   };
+        var data = {
+          "password": JSON.parse(localStorage.getItem('userInfo')).password,
+          "method": "setBidInfo",
+          "args": {
+            "_price": $scope.data.Price,
+            "_reqType": $scope.data.Qty,
+            "_entityName": $scope.data.Qty,
+            "_validator": appConfig.addressMiddlware,
+            "_consumer": appConfig.addressConsumer
+          },
+          "contract": "Bid"
+        };
   
-      //   var req = {
-      //    method: 'POST',
-      //    url: appConfig.keyserver + 'users/' + JSON.parse(localStorage.getItem('userInfo')).username+ '/'+ localStorageService.get('address') + '/contract/Pizza/' + $scope.newContract + '/call',
-      //    headers: {
-      //      'Content-Type': 'application/json'
-      //    },
-      //    data: JSON.stringify(data)
-      //   };
+        var req = {
+         method: 'POST',
+         url: appConfig.keyserver + 'users/' + JSON.parse(localStorage.getItem('userInfo')).username+ '/'+ localStorage.getItem('userAddress') + '/contract/Bid/' + $scope.newContract + '/call',
+         headers: {
+           'Content-Type': 'application/json'
+         },
+         data: JSON.stringify(data)
+        };
     
-      //   $http(req).then(response => {
-      //     /**
-      //      * Now that we have a successfully deployed smart contract 
-      //      * let's transition to the detail view of the contract.
-      //      */
-      //     $('#mining-transaction').modal('hide');
-      //     $('#mining-transaction').on('hidden.bs.modal', function (e) {
-      //       $state.transitionTo('issuance', {id:$scope.newContract});
-      //     });
-      //   }, response => {
-      //       $scope.data = response.data || "Request failed";
-      //       $scope.status = response.status;
-      //   });
+        $http(req).then(response => {
+          /**
+           * Now that we have a successfully deployed smart contract 
+           * let's transition to the detail view of the contract.
+           */
+          $('#mining-transaction').modal('hide');
+          $('#mining-transaction').on('hidden.bs.modal', function (e) {
+            $state.transitionTo('issuance', {id:$scope.newContract});
+          });
+        }, response => {
+            $scope.data = response.data || "Request failed";
+            $scope.status = response.status;
+        });
       }, response => {
-      //     $scope.data = response.data || "Request failed";
-      //     $scope.status = response.status;
+           $scope.data = response.data || "Request failed";
+           $scope.status = response.status;
        });
   }
 
